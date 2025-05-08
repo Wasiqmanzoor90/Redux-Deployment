@@ -1,25 +1,16 @@
-import axios from "axios";
 
-export const handleregister = (e, formData) => async (action) => {
-    try {
-        e.preventDefault();
-        action({ type: "API_REQUEST" });
 
-        const res = await axios.post('https://localhost:7023/api/User/Register', formData);
+import { apiPost } from "../../utils/Api Call/apiPost";
 
-        if (res.status === 200) {
-            action({
-                type: "API_SUCCESS",
-                payload: res.data,
-                message: res.data.message,
-            });
-        }
-    } catch (err) {
-        console.log(err);
-        action({
-            type: "API_FAILURE",
-            error: err,
-            message: err.message,
-        });
-    }
-};
+
+
+export const handleregister = (e, formData) => apiPost("POST", "/Register", formData, e);
+export const HandleLogin =(e, formData)=> apiPost("POST", "/Login", formData, e);
+// Redux/Action/UserAction.js
+export const verifyUser = (userData) => {
+    return {
+      type: "VERIFY_USER",  // Action type to store user data in Redux
+      payload: userData,    // User data returned from the /Verify API
+    };
+  };
+  
