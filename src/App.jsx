@@ -5,22 +5,27 @@ import Register from './Pages/Register'
 import Home from './Pages/Home'
 import PrivateRoute from './Utils/PrivateRoute'
 import Notfound from './Pages/Notfound'
+import Dashboard from './Layout/Dashboard'
 
 function App() {
-  return (
-    <div>
-<BrowserRouter>
-<Routes>
-<Route path="/" element={<Login/>} />
-<Route path='/register' element={<Register/>}/>
-<Route path='/home' element={<PrivateRoute><Home/></PrivateRoute>} />
-{/* <Route path='*' element={<Notfound/>} /> */}
-</Routes>
-</BrowserRouter>
+    return (
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route element={<PrivateRoute />}>
+                        <Route element={<Dashboard />}>
+                            <Route path="/home" element={<Home />} />
+                        </Route>
+                    </Route>
+                    <Route path="*" element={<Notfound />} />
+                </Routes>
+            </BrowserRouter>
 
 
-    </div>
-  )
+        </div>
+    )
 }
 
 export default App

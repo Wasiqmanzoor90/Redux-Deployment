@@ -1,5 +1,6 @@
 
 
+import { apiGet } from "../../utils/Api Call/apiGet";
 import { apiPost } from "../../utils/Api Call/apiPost";
 
 
@@ -14,3 +15,14 @@ export const verifyUser = (userData) => {
     };
   };
   
+  export const GetPost = () => async (dispatch) => {
+    const data = await apiGet("/GetPostsByUser")(dispatch);
+    console.log('Fetched posts from API:', data);
+  
+    if (data) {
+      dispatch({
+        type: "SET_POSTS",
+        payload: data,
+      });
+    }
+  };

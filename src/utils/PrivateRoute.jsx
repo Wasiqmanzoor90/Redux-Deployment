@@ -1,17 +1,16 @@
-// PrivateRoute.jsx
 import React, { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { axiosInstance } from "./axiosInstance"; // Assuming this is where your axios instance is
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { axiosInstance } from "../utils/axiosInstance";
 
-const PrivateRoute = ({ children }) => {
-  const [isAuth, setIsAuth] = useState(null); // To track the auth state
+const PrivateRoute = () => {
+  const [isAuth, setIsAuth] = useState(null);
   const token = localStorage.getItem("token");
   const location = useLocation();
 
   useEffect(() => {
     const verifyToken = async () => {
       if (!token || token === "undefined" || token === "null") {
-        setIsAuth(false); // No token, unauthenticated
+        setIsAuth(false);
         return;
       }
 
@@ -22,27 +21,19 @@ const PrivateRoute = ({ children }) => {
           },
         });
 
-        if (res.status === 200) {
-          setIsAuth(true); // Token is valid, authenticated
-        } else {
-          setIsAuth(false); // Invalid token
-        }
+        setIsAuth(res.status === 200);
       } catch (error) {
-        setIsAuth(false); // Token verification failed (e.g., expired token)
+        setIsAuth(false);
       }
     };
 
     verifyToken();
   }, [token]);
 
-  // While verifying, you can show a loading state (optional)
-  if (isAuth === null) return null; // Optionally, show a loader here
-
-  // If not authenticated, redirect to login page
+  if (isAuth === null) return null; // You can return a loader here
   if (isAuth === false) return <Navigate to="/" state={{ from: location }} />;
 
-  // If authenticated, render the protected children
-  return children;
+  return <Outlet />; // 👈 CRUCIAL: this renders the nested routes (Dashboard -> Home)
 };
 
 export default PrivateRoute;

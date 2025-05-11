@@ -1,29 +1,38 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "", // User's name (or any other user-related information)
-  error: null, // For storing error messages
-  payload: [], // To store any data (perhaps from an API response)
-
+  name: "",         // User's name
+  error: null,      // Error message
+  message: "",      // Success/failure message
+  payload: [],      // General-purpose API data
+  posts: [],        // Store posts here
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
   builder
-    // Handling API_REQUEST: This is when you start making an API request
+    // API request started
     .addCase("API_REQUEST", (state) => {
-      state.error = null; // Clear error message
-      state.message = "";  // Clear any message
+      state.error = null;
+      state.message = "";
     })
-    // Handling API_SUCCESS: This is when the API request is successful
+
+    // API success
     .addCase("API_SUCCESS", (state, action) => {
-      const { name } = action.payload; // Assume the API response contains name and message
-      state.name = name || state.name; // If name is returned, update it
-      state.payload = action.payload; // Store the complete payload (response data)
-      state.error = null; // Clear any existing error message
+      const { name, message } = action.payload || {};
+      state.name = name || state.name;
+      state.payload = action.payload;
+      state.error = null;
+      state.message = message || "";
     })
-    // Handling API_FAILURE: This is when the API request fails
+
+    // API failure
     .addCase("API_FAILURE", (state, action) => {
-      state.error = action.error || "Request failed"; // Set error message, fallback to default
-      state.message = action.message || ""; // Optional: Store any failure message
+      state.error = action.error?.message || "Request failed";
+      state.message = action.message || "";
+    })
+
+    // Set posts (from /GetPostsByUser)
+    .addCase("SET_POSTS", (state, action) => {
+      state.posts = action.payload;
     });
 });
