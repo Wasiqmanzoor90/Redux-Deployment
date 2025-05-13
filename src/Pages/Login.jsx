@@ -20,7 +20,7 @@ setForm({email:'', Password:''})
 
   return (
     <div className='container w-25 mt-5 p-5' style={{border:'1px solid lightgrey'}}>
-       <h1>Register</h1>
+       <h1>Log in</h1>
        <form onSubmit={(e)=>{
         HandleSubmit(e)
        }} >

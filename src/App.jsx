@@ -6,6 +6,8 @@ import Home from './Pages/Home'
 import PrivateRoute from './Utils/PrivateRoute'
 import Notfound from './Pages/Notfound'
 import Dashboard from './Layout/Dashboard'
+import Comment from './Pages/comment'
+
 
 function App() {
     return (
@@ -17,6 +19,8 @@ function App() {
                     <Route element={<PrivateRoute />}>
                         <Route element={<Dashboard />}>
                             <Route path="/home" element={<Home />} />
+                            {/* <Route path="/comment/:id" element={<comment/>} /> */}
+                            <Route path='/comment/:id' element={<Comment/>}/>
                         </Route>
                     </Route>
                     <Route path="*" element={<Notfound />} />

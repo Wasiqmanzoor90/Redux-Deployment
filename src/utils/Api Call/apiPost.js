@@ -1,24 +1,26 @@
+
 import { axiosInstance } from "../axiosInstance";
+import Cookies from 'js-cookie';
 
 export const apiPost = (requestType, url, formData, e, Id) => async (action) => {
-    try {
 
-        if (e) {
-            e.preventDefault();
-        }
+    try {
+        if (e) e.preventDefault();
         action({ type: "API_REQUEST" });
 
         let res;
-        if (requestType == 'POST') {
+        if (requestType === 'POST') {
             res = await axiosInstance.post(url, formData);
         }
 
         if (res.status === 200) {
             const { data } = res;
-            
-            // Store token in localStorage if it exists in the response
+
             if (data.token) {
-                localStorage.setItem('token', data.token);
+               
+                Cookies.set('token', data.token, { expires: 1 });
+                window.location.href = "/home";
+
             }
         }
         

@@ -16,9 +16,7 @@ export const verifyUser = (userData) => {
   };
   
   export const GetPost = () => async (dispatch) => {
-    const data = await apiGet("/GetPostsByUser")(dispatch);
-    console.log('Fetched posts from API:', data);
-  
+    const data = await apiGet("/GetPostsByUser")(dispatch); 
     if (data) {
       dispatch({
         type: "SET_POSTS",
@@ -26,3 +24,4 @@ export const verifyUser = (userData) => {
       });
     }
   };
+  
