@@ -20,7 +20,7 @@ function App() {
                         <Route element={<Dashboard />}>
                             <Route path="/home" element={<Home />} />
                             {/* <Route path="/comment/:id" element={<comment/>} /> */}
-                            <Route path='/comment/:id' element={<Comment/>}/>
+                            <Route path="/comment/:postId" element={<Comment />} />
                         </Route>
                     </Route>
                     <Route path="*" element={<Notfound />} />

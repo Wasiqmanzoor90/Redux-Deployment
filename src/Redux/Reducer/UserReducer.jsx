@@ -1,38 +1,59 @@
+// userReducer.js
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "",         // User's name
-  error: null,      // Error message
-  message: "",      // Success/failure message
-  payload: [],      // General-purpose API data
-  posts: [],        // Store posts here
+  name: "",
+  email: "",
+  error: null,
+  message: "",
+  payload: [],
+  posts: [],
+  comment: [],  // Initialize as empty array
+  commentsLoading: false,
+  isAuthenticated: false
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
   builder
-    // API request started
     .addCase("API_REQUEST", (state) => {
       state.error = null;
       state.message = "";
     })
-
-    // API success
-    .addCase("API_SUCCESS", (state, action) => {
-      const { name, message } = action.payload || {};
-      state.name = name || state.name;
-      state.payload = action.payload;
-      state.error = null;
-      state.message = message || "";
+    
+    // User verification
+    .addCase("USER_VERIFY_SUCCESS", (state, action) => {
+      const payload = action.payload || {};
+      
+      state.name = payload.name || "";
+      state.email = payload.email || "";
+      state.message = payload.message || "";
+      state.isAuthenticated = !!(payload.name || payload.email);
     })
-
-    // API failure
+    
+    // Old VERIFY_USER case (if still needed)
+    .addCase("VERIFY_USER", (state, action) => {
+      const payload = action.payload || {};
+      
+      state.name = payload.name || "";
+      state.email = payload.email || "";
+      state.message = payload.message || "";
+      state.isAuthenticated = !!(payload.name || payload.email);
+    })
+    
     .addCase("API_FAILURE", (state, action) => {
       state.error = action.error?.message || "Request failed";
       state.message = action.message || "";
+      state.isAuthenticated = false;
     })
-
-    // Set posts (from /GetPostsByUser)
+    
     .addCase("SET_POSTS", (state, action) => {
       state.posts = action.payload;
+    })
+    
+    // Set comments with better logging
+    .addCase("SET_COMMENTS", (state, action) => {
+      state.comment = action.payload || [];
+      state.commentsLoading = false;
+      console.log("Comments in reducer after setting:", state.comment);
     });
 });
