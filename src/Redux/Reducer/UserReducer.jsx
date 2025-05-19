@@ -2,6 +2,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
+  userId:"",
   name: "",
   email: "",
   error: null,
@@ -9,8 +10,10 @@ const initialState = {
   payload: [],
   posts: [],
   comment: [],  // Initialize as empty array
+  
   commentsLoading: false,
-  isAuthenticated: false
+  isAuthenticated: false,
+  // Likes:[]
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
@@ -21,24 +24,16 @@ export const userReducer = createReducer(initialState, (builder) => {
     })
     
     // User verification
-    .addCase("USER_VERIFY_SUCCESS", (state, action) => {
+    .addCase("VERIFY_SUCCESS", (state, action) => {
       const payload = action.payload || {};
-      
+      state.userId = payload.userId || "";
       state.name = payload.name || "";
       state.email = payload.email || "";
       state.message = payload.message || "";
       state.isAuthenticated = !!(payload.name || payload.email);
     })
     
-    // Old VERIFY_USER case (if still needed)
-    .addCase("VERIFY_USER", (state, action) => {
-      const payload = action.payload || {};
-      
-      state.name = payload.name || "";
-      state.email = payload.email || "";
-      state.message = payload.message || "";
-      state.isAuthenticated = !!(payload.name || payload.email);
-    })
+   
     
     .addCase("API_FAILURE", (state, action) => {
       state.error = action.error?.message || "Request failed";
@@ -48,6 +43,20 @@ export const userReducer = createReducer(initialState, (builder) => {
     
     .addCase("SET_POSTS", (state, action) => {
       state.posts = action.payload;
+    })
+
+    .addCase("LIKE_POST", (state, action) => {
+      const { postId, userId } = action.payload;
+      const post = state.posts.find(post => post.id === postId);
+    
+      if (post) {
+        post.LikedBy = post.LikedBy || [];
+        const likedIndex = post.LikedBy.indexOf(userId);
+        
+        likedIndex !== -1
+          ? post.LikedBy.splice(likedIndex, 1)
+          : post.LikedBy.push(userId);
+      }
     })
     
     // Set comments with better logging

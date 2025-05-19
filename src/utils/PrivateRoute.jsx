@@ -27,7 +27,7 @@ const PrivateRoute = () => {
       
         // Dispatch user info to Redux here
         dispatch({
-          type: "USER_VERIFY_SUCCESS",
+          type: "VERIFY_SUCCESS",
           payload: res.data,
         });
       

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetPost } from '../Redux/Action/UserAction';
+import { GetPost, toggleLike } from '../Redux/Action/UserAction';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
@@ -8,6 +8,9 @@ function Home() {
   const navigate = useNavigate();
   const posts = useSelector((state) => state.user.posts || []);
   const error = useSelector((state) => state.user.error);
+  const userIdFromState = useSelector((state) => state.user.userId);
+  const userId = userIdFromState || JSON.parse(localStorage.getItem("user"))?.userId;
+
 
   useEffect(() => {
     dispatch(GetPost());
@@ -21,6 +24,7 @@ function Home() {
 
   return (
     <div>
+
       <h2>Posts</h2>
       {posts && posts.length > 0 ? (
         posts.map((post, index) => (
@@ -58,6 +62,19 @@ function Home() {
             >
               mode_comment
             </span>
+
+            <span
+              style={{
+                cursor: 'pointer',
+                color: post.LikedBy?.includes(userId) ? 'red' : 'black'
+              }}
+              onClick={() => dispatch(toggleLike(post.id, userId))}
+              className="material-symbols-outlined"
+            >
+              {post.LikedBy?.includes(userId) ? 'favorite' : 'favorite_border'}
+            </span>
+
+
 
 
             <p style={{ fontSize: '0.7rem' }}>Uploaded: {new Date(post.createdAt).toLocaleString()}</p>
